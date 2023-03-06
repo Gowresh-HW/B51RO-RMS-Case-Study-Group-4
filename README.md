@@ -5,7 +5,7 @@ Robotic Mechanical Systems - Case Study - Group 4, HWU Dubai
 Development of A Human-eye Rotation Inspired Two-axis Camera 
 Mounting System 
 
-** Group Members **
+** Group Members **  
 Joshua Hedwic Goldwin  
 Karen J Dsouza  
 Abram J Theckayil  
