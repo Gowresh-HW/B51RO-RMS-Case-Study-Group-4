@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+
+<robot name="pan_tilt"><!-- Its elements are <link>,<joint>,<transmission>,<gazebo>-->
+
+    <material name="yellow">
+        <color rgba="1 1 0 1" />
+    </material>
+    <material name="blue">
+        <color rgba="0 0 1 1" />
+    </material>
+    <material name="white">
+        <color rgba="1 1 1 1" />
+    </material>
+    <material name="green">
+        <color rgba="1 0 0 1" />
+    </material>
+    <material name="black">
+        <color rgba="0 0 0 1" />
+    </material>
+    
+    <link name="base_link"><!-- It has  3 elements <visual>,<collision>,<inertial>-->
+        <visual>
+            <geometry>
+                <cylinder length="0.1" radius="0.25"/>
+            </geometry>
+            <origin xyz="0 0 0.025" rpy="0 0 0 " />
+            <material name="blue" />
+        </visual>  
+        <collision>
+            <geometry>
+                <cylinder length="0.055" radius="0.25"/>
+            </geometry>
+            <origin xyz="0 0 0.025" rpy="0 0 0 " />
+        </collision> 
+        <!--[ WARN] [1656079412.718004450]: 
+            The root link base_link has an inertia specified in the URDF, 
+            but KDL does not support a root link with an inertia.  
+            As a workaround, you can add an extra dummy link to your URDF.
+        <inertial>
+            <origin xyz="0 0 0 " rpy="0 0 0 " />
+            <mass value="1" />
+            <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+        </inertial>  -->  
+    </link>
+
+    <link name="pan_link">
+        <visual>
+            <geometry>
+                
+                <mesh filename="package://pan_tilt/urdf/bottom.stl" scale='0.003 0.003 0.003'/>
+            </geometry>
+            <origin xyz="-0.06 -0.09 0.25" rpy="1.5708 0 1.5708 " />
+            <material name="green" />
+        </visual>  
+        <collision>
+            <geometry>
+                <cylinder length="0.55" radius="0.025"/>
+            </geometry>
+            <origin xyz="0 0 0.25" rpy="0 0 0 " />
+        </collision>    
+        <inertial>
+            <origin xyz="0 0 0.25 " rpy="0 0 0 " />
+            <mass value="1" />
+            <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+        </inertial>        
+    </link>
+
+    <joint name="pan_joint"  type="revolute">
+        <parent link="base_link" />
+        <child link="pan_link" />
+        <origin xyz="0 0 0.05" rpy="0 0 0 " />
+        <axis xyz="0 0 1" /> <!-- Only rotate in Z-Axis -->
+
+        <limit effort="300" velocity="1" lower="-1.5708" upper="1.5708" />
+        <dynamics damping="50" friction="0.0" />
+    </joint>
+
+    <link name="bearing">
+        <visual> 
+            <origin xyz="-0.06 -0.05 -0.25" rpy="1.5708 0 1.5708 " />
+            <geometry>
+                <mesh filename="package://pan_tilt/urdf/holder.stl" scale='0.003 0.003 0.003'/>
+            </geometry>
+            <material name="green" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0 " />
+            <geometry>
+                <sphere radius="0.11" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0 " />
+            <mass value="1" />
+            <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+        </inertial> 
+    </link>
+
+    <joint name="bearing_joint" type="fixed">
+        <parent link="pan_link" />
+        <child link="bearing" />
+        <origin xyz="0 0 0.5" rpy="0 0 0 " />
+    </joint>
+
+    <link name="tilt_link">
+        <visual> 
+            <origin xyz="0.09 0 -0.05" rpy="1.5708 0 1.5708 " />
+            <geometry>
+                <mesh filename="package://pan_tilt/urdf/link2.stl" scale='0.003 0.003 0.003'/>
+            </geometry>
+            <material name="green" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0 " />
+            <geometry>
+                <box size="0.11 0.11 0.031" />
+            </geometry>
+        </collision>
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0 " />
+            <mass value="1" />
+            <inertia ixx="1" ixy="0" ixz="0" iyy="1" iyz="0" izz="1" />
+        </inertial>  
+    </link>
+
+    <joint name="tilt_joint" type="revolute">
+        <parent link="bearing" />
+        <child link="tilt_link" />
+        <origin xyz="0.0 0 -0.045" rpy="0 0 0 " />
+
+        <limit effort="300" velocity="1" lower="-1.5708" upper="1.5708" />
+        <dynamics damping="5.0" friction="0.0" />
+    </joint>
+    
+    <link name="cam_link">
+        <visual> 
+            <origin xyz="0.1 0.27 -0.03" rpy="1.5708 0 1.5708 " />
+            <geometry>
+                <mesh filename="package://pan_tilt/urdf/cam.stl" scale='0.003 0.003 0.003'/>
+            </geometry>
+            <material name="white" />
+        </visual>
+ 
+    </link>
+    
+    <joint name="cam_joint" type="fixed">
+        <parent link="tilt_link" />
+        <child link="cam_link" />
+        <origin xyz="0 0 0" rpy="0 0 0 " />
+    </joint>
+
+</robot>
